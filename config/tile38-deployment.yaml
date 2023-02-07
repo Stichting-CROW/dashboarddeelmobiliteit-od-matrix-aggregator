@@ -1,0 +1,36 @@
+---
+# Tile38 master deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tile38
+spec:
+  selector:
+    matchLabels:
+      app: tile38
+  template:
+    metadata:
+      labels:
+        app: tile38
+    spec:
+      containers:
+        - image: "tile38/tile38:1.28.0"
+          name: tile38
+          command: ["tile38-server"]
+          args: ["--appendonly", "no"]
+          ports:
+            - containerPort: 9851
+              name: tile38
+---
+# Tile38 master service
+apiVersion: v1
+kind: Service
+metadata:
+  name: tile38
+spec:
+  type: NodePort
+  ports:
+    - port: 9851
+  selector:
+    app: tile38
+---
