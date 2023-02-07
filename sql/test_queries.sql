@@ -5,9 +5,14 @@ AND aggregation_period_id IN (
     SELECT aggregation_period_id 
     FROM od_h3_aggregation_period
     WHERE extract(isodow from start_time_period) IN (1, 2, 3, 4, 5)
-    AND extract(hour from start_time_period) IN (1, 5, 9)
+    AND extract(hour from start_time_period) IN (2, 4, 10)
     AND start_time_period >= '2023-01-01' and end_time_period <= '2023-01-05'
 );
+SELECT start_time_period
+    FROM od_h3_aggregation_period
+    WHERE extract(isodow from start_time_period) IN (1, 2, 3, 4, 5)
+    AND extract(hour from start_time_period) IN (2, 4, 10)
+    AND start_time_period >= '2023-01-01' and end_time_period <= '2023-01-05'
 
 
 SELECT destination_cell, sum(number_of_trips)
@@ -18,7 +23,7 @@ AND aggregation_period_id IN (
     SELECT aggregation_period_id 
     FROM od_h3_aggregation_period
     WHERE extract(isodow from start_time_period) IN (1, 2, 3, 4, 5)
-    AND extract(hour from start_time_period) IN (1, 5, 9)
+    AND extract(hour from start_time_period) IN (2, 4, 10)
     AND start_time_period >= '2022-11-01' and end_time_period <= '2023-02-07'
 ) GROUP by destination_cell order by sum(number_of_trips) DESC;
 
@@ -59,8 +64,8 @@ AND aggregation_period_id IN (
     SELECT aggregation_period_id 
     FROM od_h3_aggregation_period
     WHERE extract(isodow from start_time_period) IN (1, 2, 3, 4, 5)
-    AND extract(hour from start_time_period) IN (1, 5, 9)
-    AND start_time_period >= '2022-09-01' and end_time_period <= '2023-02-07'
+    AND extract(hour from start_time_period) IN (2, 4, 10)
+    AND start_time_period >= '2022-10-01' and end_time_period <= '2023-02-07'
 ) GROUP by destination_cell, origin_cell;
 
 
