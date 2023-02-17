@@ -1,5 +1,4 @@
-
-CREATE TABLE od_h3_aggregation_period (
+CREATE TABLE od_aggregation_period (
     aggregation_period_id   SERIAL PRIMARY KEY, 
     start_time_period       TIMESTAMPTZ,
     end_time_period         TIMESTAMPTZ,
@@ -17,7 +16,7 @@ CREATE TABLE od_h3 (
     number_of_trips       INTEGER NOT NULL,
     CONSTRAINT fk_aggregation_period
       FOREIGN KEY(aggregation_period_id) 
-	  REFERENCES od_h3_aggregation_period(aggregation_period_id)
+	  REFERENCES od_aggregation_period(aggregation_period_id)
 	  ON DELETE CASCADE
 );
 

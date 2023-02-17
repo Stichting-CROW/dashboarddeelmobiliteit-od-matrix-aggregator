@@ -4,7 +4,6 @@ import db
 
 def get_time_periods_that_should_be_in_data(start_timestamp):
     tz_amsterdam = timezone('Europe/Amsterdam')
-    start_timestamp = datetime(2022, 1, 1, 0, 0, 0, tzinfo=utc)
     end_timestamp = start_timestamp + timedelta(hours = 4)
     timestamps = []
     # only start calculating stats 1 hour after passing timestamp.
@@ -28,7 +27,7 @@ def get_time_periods_that_should_be_in_data(start_timestamp):
     return timestamps
 
 def get_missing_time_periods():
-    start_timestamp = datetime(2022, 9, 1, 0, 0, 0, tzinfo=utc)
+    start_timestamp = datetime(2022, 1, 1, 0, 0, 0, tzinfo=utc)
     time_periods_that_should_be_in_data = get_time_periods_that_should_be_in_data(start_timestamp)
     time_periods_in_data = db.query_all_aggregation_periods_since(start_timestamp.astimezone(timezone('Europe/Amsterdam')))
     

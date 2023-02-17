@@ -1,0 +1,35 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: od-matrix-aggregator
+spec:
+  concurrencyPolicy: Forbid
+  failedJobsHistoryLimit: 5
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: Never
+          containers:
+          - env:
+            - name: DB_HOST
+              value: 10.133.75.95
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: password
+                  name: db-password-deelfietsdashboard
+            - name: DB_USER
+              value: deelfietsdashboard
+            - name: DB_PORT
+              value: "5432"
+            - name: TZ
+              value: Europe/Amsterdam
+            image: ghcr.io/stichting-crow/dashboarddeelmobiliteit-od-matrix-aggregator:0.6.1
+            imagePullPolicy: IfNotPresent
+            name: od-matrix-aggregator
+            terminationMessagePath: /dev/termination-log
+            terminationMessagePolicy: File
+  schedule: 21 * * * *
+  successfulJobsHistoryLimit: 5
+  suspend: false

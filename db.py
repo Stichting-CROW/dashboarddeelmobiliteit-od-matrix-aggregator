@@ -4,7 +4,7 @@ from datetime import timedelta
 def query_all_aggregation_periods_since(timestamp):
     stmt = """
         SELECT aggregation_period_id, start_time_period, end_time_period
-        FROM od_h3_aggregation_period
+        FROM od_aggregation_period
         WHERE start_time_period >= %(start_period)s
         ORDER BY start_time_period;
     """
@@ -18,7 +18,7 @@ def query_all_aggregation_periods_since(timestamp):
 
 def query_to_update_periods():
     stmt = """SELECT aggregation_period_id, start_time_period, end_time_period 
-    FROM od_h3_aggregation_period 
+    FROM od_aggregation_period 
     WHERE (NOW() - updated_at > '1 DAY' and updated_at - start_time_period < '1 DAY')
     OR (NOW() - updated_at > '3 DAYS' and updated_at - start_time_period < '3 DAYS')
     OR (NOW() - updated_at > '1 WEEK' and updated_at - start_time_period < '1 WEEK')
@@ -57,7 +57,7 @@ def query_trips_per_time_block(start_time_period, end_time_period):
 def check_if_aggregation_period_exists(start_time_period, end_time_period):
     stmt = """
         SELECT aggregation_period_id
-        FROM od_h3_aggregation_period
+        FROM od_aggregation_period
         WHERE start_time_period = %s
         AND end_time_period = %s
     """
@@ -74,7 +74,7 @@ def check_if_aggregation_period_exists(start_time_period, end_time_period):
 
 def insert_aggregation_period(start_time_period, end_time_period):
     stmt = """
-        INSERT INTO od_h3_aggregation_period
+        INSERT INTO od_aggregation_period
         (start_time_period, end_time_period, calculation_iteration, created_at, updated_at)
         VALUES (%s, %s, 1, NOW(), NOW())
         RETURNING aggregation_period_id
@@ -91,7 +91,7 @@ def insert_aggregation_period(start_time_period, end_time_period):
 
 def new_calculation_iteration_aggregation_period(aggregation_period_id):
     stmt = """
-        UPDATE od_h3_aggregation_period
+        UPDATE od_aggregation_period
         SET calculation_iteration = calculation_iteration + 1,
         updated_at = NOW()
         WHERE aggregation_period_id = %s 
