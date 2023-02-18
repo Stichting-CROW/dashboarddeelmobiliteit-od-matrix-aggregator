@@ -1,3 +1,4 @@
 psycopg2-binary==2.9.3
 h3==3.7.6
 pytz==2022.7.1
+shapely==2.0.1 

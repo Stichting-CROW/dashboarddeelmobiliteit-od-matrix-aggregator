@@ -104,7 +104,7 @@ def new_calculation_iteration_aggregation_period(aggregation_period_id):
             conn.rollback()
             print(e)
 
-def delete_od_aggregation_period(aggregation_period_id):
+def delete_od_h3_aggregation_period(aggregation_period_id):
     stmt = """
         DELETE 
         FROM od_h3
@@ -114,6 +114,52 @@ def delete_od_aggregation_period(aggregation_period_id):
         try:
             cur.execute(stmt, (aggregation_period_id,))
             conn.commit()
+        except Exception as e:
+            conn.rollback()
+            print(e)
+
+def delete_od_geometry_aggregation_period(aggregation_period_id):
+    stmt = """
+        DELETE 
+        FROM od_geometry
+        WHERE aggregation_period_id = %s
+    """
+    with db_helper.get_resource() as (cur, conn):
+        try:
+            cur.execute(stmt, (aggregation_period_id,))
+            conn.commit()
+        except Exception as e:
+            conn.rollback()
+            print(e)
+
+def get_municipalities():
+    stmt = """
+        SELECT name, st_asgeojson(area) as area
+        FROM zones 
+        WHERE zone_type = 'municipality' AND municipality = 'GM0599';
+    """
+    with db_helper.get_resource() as (cur, conn):
+        try:
+            cur.execute(stmt)
+            result = cur.fetchall()
+            conn.commit()
+            return result
+        except Exception as e:
+            conn.rollback()
+            print(e)
+
+def get_residential_areas():
+    stmt = """
+        SELECT name, st_asgeojson(area) as area, stats_ref
+        FROM zones 
+        WHERE zone_type = 'residential_area';
+    """
+    with db_helper.get_resource() as (cur, conn):
+        try:
+            cur.execute(stmt)
+            result = cur.fetchall()
+            conn.commit()
+            return result
         except Exception as e:
             conn.rollback()
             print(e)
