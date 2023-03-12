@@ -42,3 +42,22 @@ CREATE INDEX od_geometry_aggregation_period_id ON od_geometry (aggregation_perio
 CREATE INDEX od_geometry_origin ON od_geometry (origin_stats_ref);
 CREATE INDEX od_geometry_destination ON od_geometry (destination_stats_ref);
 CREATE INDEX od_geometry_modality ON od_geometry (modality);
+
+CREATE TABLE od_h3_acl (
+    municipality_code     VARCHAR(30) NOT NULL,
+    h3_level              SMALLINT NOT NULL,
+    municipality_name     VARCHAR(255),
+    cells                 BIGINT[],
+    PRIMARY KEY (municipality_code, h3_level)
+);
+
+CREATE MATERIALIZED VIEW residential_areas
+AS
+ SELECT zone_id,
+    ST_AsGeoJSON(area) as area,
+    municipality,
+    stats_ref
+   FROM zones
+   WHERE zone_type = 'residential_area'
+;
+CREATE INDEX residential_area_municipality ON residential_area (municipality);

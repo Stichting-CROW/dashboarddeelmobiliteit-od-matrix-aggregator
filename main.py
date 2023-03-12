@@ -8,6 +8,7 @@ from shapely.geometry import shape
 import od_h3
 import od_residential
 import get_residential_area
+import cache_acl_h3
 
 logging.basicConfig(
         format='%(asctime)s %(levelname)-8s %(message)s',
@@ -47,18 +48,9 @@ def update_data(geometries):
         od_residential.process(trips, geometries, aggregation_period_id)
     logger.info("finish recalculating od matrices")
 
-
-def get_h3s():
-    res = db.get_municipalities()
-    for row in res:
-        s = shape(json.loads(row["area"]))
-        for polygon in list(s.geoms):
-            xx, yy = polygon.exterior.coords.xy
-            print(h3.polyfill_polygon(list(zip(yy, xx)), 8))
-
 def main():
     start = time.time()
-    # get_h3s()
+    cache_acl_h3.cache_h3_acl()
     residential_area = get_residential_area.get_residential_areas()
     insert_data(residential_area)
     update_data(residential_area)

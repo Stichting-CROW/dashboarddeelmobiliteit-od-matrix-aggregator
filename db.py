@@ -1,5 +1,6 @@
 from db_helper import db_helper
 from datetime import timedelta
+from psycopg2.extras import execute_values
 
 def query_all_aggregation_periods_since(timestamp):
     stmt = """
@@ -134,9 +135,9 @@ def delete_od_geometry_aggregation_period(aggregation_period_id):
 
 def get_municipalities():
     stmt = """
-        SELECT name, st_asgeojson(area) as area
+        SELECT name, st_asgeojson(area) as area, municipality
         FROM zones 
-        WHERE zone_type = 'municipality' AND municipality = 'GM0599';
+        WHERE zone_type = 'municipality';
     """
     with db_helper.get_resource() as (cur, conn):
         try:
@@ -164,6 +165,71 @@ def get_residential_areas():
             conn.rollback()
             print(e)
 
+def check_h3_cache_filled():
+    stmt = """
+        SELECT count(*) != 0 as is_filled 
+        FROM od_h3_acl;
+    """
+    with db_helper.get_resource() as (cur, conn):
+        try:
+            cur.execute(stmt) 
+            return cur.fetchone()["is_filled"]
+        except Exception as e:
+            conn.rollback()
+            print(e)
+            return False
+
+def insert_h3_cache_acl(rows):
+    stmt = """
+    INSERT INTO od_h3_acl
+    (municipality_code, municipality_name, h3_level, cells)
+    VALUES
+    %s
+    """
+    with db_helper.get_resource() as (cur, conn):
+        try:
+            execute_values (
+                cur, stmt, rows, "(%s, %s, %s, %s)", page_size=100
+            )    
+            conn.commit()
+        except Exception as e:
+            conn.rollback()
+            print(e)
+
+def is_admin(user_id):
+    stmt = """
+    INSERT INTO od_h3_acl
+    (municipality_code, municipality_name, h3_level, cells)
+    VALUES
+    %s
+    """
+    with db_helper.get_resource() as (cur, conn):
+        try:
+            execute_values (
+                cur, stmt, rows, "(%s, %s, %s, %s)", page_size=100
+            )    
+            conn.commit()
+        except Exception as e:
+            conn.rollback()
+            print(e)
+
+def insert_h3_cache_acl(rows):
+    stmt = """
+    INSERT INTO od_h3_acl
+    (municipality_code, municipality_name, h3_level, cells)
+    VALUES
+    %s
+    """
+    with db_helper.get_resource() as (cur, conn):
+        try:
+            execute_values (
+                cur, stmt, rows, "(%s, %s, %s, %s)", page_size=100
+            )    
+            conn.commit()
+        except Exception as e:
+            conn.rollback()
+            print(e)
+    
 
 def execute(stmt):
     with db_helper.get_resource() as (cur, conn):
