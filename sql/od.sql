@@ -60,4 +60,4 @@ AS
    FROM zones
    WHERE zone_type = 'residential_area'
 ;
-CREATE INDEX residential_area_municipality ON residential_area (municipality);
+CREATE INDEX residential_area_municipality ON residential_areas (municipality);
