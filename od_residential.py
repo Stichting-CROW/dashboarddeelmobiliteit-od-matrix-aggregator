@@ -7,6 +7,8 @@ logger = logging.getLogger(__name__)
 
 def process(trips, geometries, aggregation_period_id):
     od_matrix = calculate_od_geometry(trips, geometries)
+    if len(od_matrix) == 0:
+        return
     store_od(od_matrix, aggregation_period_id)
 
 def calculate_od_geometry(trips, geometries):

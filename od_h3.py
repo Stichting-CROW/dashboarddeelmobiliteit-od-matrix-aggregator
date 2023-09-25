@@ -3,6 +3,8 @@ import h3
 
 def process(trips, aggregation_period_id):
     od_matrix = {**calculate_od_h3(trips, 7), **calculate_od_h3(trips, 8)}
+    if len(od_matrix) == 0:
+        return
     store_od_h3(od_matrix, aggregation_period_id)
 
 def calculate_od_h3(trips, h3_level):
@@ -21,7 +23,8 @@ def calculate_od_h3(trips, h3_level):
 
 def store_od_h3(od_matrix, aggregation_period_id):
     query = get_od_h3_prepare_insert(aggregation_period_id, od_matrix)
-    db.execute(query)
+    if query:
+        db.execute(query)
 
 def get_od_h3_prepare_insert(aggregation_period_id, od_matrix):
     insert_values = []
@@ -35,6 +38,8 @@ def get_od_h3_prepare_insert(aggregation_period_id, od_matrix):
             f"('{aggregation_period_id}', {origin_cell}, {destination_cell}, '{h3_level}', '{modality}', { number_of_trips})"
         )
 
+    if len(insert_values) == 0:
+        return None
     query = f"""INSERT INTO od_h3
       VALUES {','.join(insert_values)}
     """
