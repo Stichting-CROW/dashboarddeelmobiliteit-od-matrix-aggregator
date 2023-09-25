@@ -3,7 +3,6 @@ import h3
 import time
 import od_aggregation_periods
 import logging
-import json
 from shapely.geometry import shape
 import od_h3
 import od_residential
