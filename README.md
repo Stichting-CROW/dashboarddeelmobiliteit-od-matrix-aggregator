@@ -17,6 +17,12 @@ ssh -L 5433:10.133.75.95:5432 root@auth.deelfietsdashboard.nl
 ```
 
 # Building:
+The Docker image is built and published to GitHub Container Registry by the
+CI workflow in `.github/workflows/ci.yml`. Pushing to `main` publishes the
+`latest` tag, and pushing a version tag (e.g. `0.6.1`) publishes that version.
+Use the versioned tag in `cronjob.yaml`.
+
+To build and push manually:
 ```bash
 docker build -t ghcr.io/stichting-crow/dashboarddeelmobiliteit-od-matrix-aggregator:x.y .
 docker push ghcr.io/stichting-crow/dashboarddeelmobiliteit-od-matrix-aggregator:x.y

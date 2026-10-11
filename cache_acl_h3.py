@@ -33,6 +33,6 @@ def get_h3_cells(geojson, h3_level):
 def get_cells_for_polygon(polygon, h3_level):
     polygon_2d = shapely.transform(polygon, lambda coord: coord)
     geojson_dict = shapely.geometry.mapping(polygon_2d)
-    cells = h3.polyfill(geojson_dict, h3_level, geo_json_conformant=True)
-    cells = map(lambda h3_cell_str: h3.h3.string_to_h3(h3_cell_str), cells)
+    cells = h3.geo_to_cells(geojson_dict, h3_level)
+    cells = map(lambda h3_cell_str: h3.str_to_int(h3_cell_str), cells)
     return cells
