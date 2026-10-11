@@ -45,7 +45,8 @@ def query_trips_per_time_block(start_time_period, end_time_period):
         JOIN vehicle_type 
         USING (vehicle_type_id) 
         WHERE start_time >= %(start_period)s  
-        AND start_time <= %(end_period)s ;
+        AND start_time <= %(end_period)s
+        AND trips.trip_source = 'vehicles' ;
     """
     with db_helper.get_resource() as (cur, conn):
         try:
